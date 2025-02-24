@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Clickable Regions</title>
+
+    <link rel="stylesheet" href="styles.css" />
+
+    <script type="module" src="index.js"></script>
+  </head>
+  <body>
+    <a href="#main">Skip to main content</a>
+    <h1 id="main">Clickable Regions</h1>
+
+    <div>
+      <span class="red" onclick='alert("span")'>
+        <img
+          src="./images/placeholder.svg"
+          alt="placeholder"
+          style="position: relative; top: -10px; left: 10px"
+        />
+
+        <div
+          class="purple"
+          style="
+            position: absolute;
+            top: 100px;
+            left: 275px;
+            width: 200px;
+            height: 200px;
+          "
+        ></div>
+
+        <div
+          class="red"
+          style="
+            position: absolute;
+            top: 350px;
+            left: 275px;
+            width: 200px;
+            height: 200px;
+          "
+        ></div>
+
+        <div
+          class="blue"
+          style="
+            position: absolute;
+            top: 300px;
+            left: 600px;
+            width: 200px;
+            height: 200px;
+          "
+        ></div>
+      </span>
+
+      <div
+        class="green"
+        style="
+          position: absolute;
+          top: 100px;
+          left: 50px;
+          width: 200px;
+          height: 200px;
+        "
+      ></div>
+
+      <div
+        class="yellow"
+        style="
+          position: absolute;
+          top: 325px;
+          left: 50px;
+          width: 200px;
+          height: 200px;
+          pointer-events: none;
+        "
+      ></div>
+    </div>
+
+    <p>
+      This demonstrates the clickable region of the an element, in this case a
+      <code>span</code> with a nested <code>img</code> element and a number of
+      nested, absolutely positioned <code>div</code> elements.
+    </p>
+    <p>
+      The clickable region of the <code>span</code> is the bounding box of the
+      span itself, the bounding box of its child <code>img</code> and those of
+      its <code>div</code> children, even of <code>div.blue</code> which is
+      disconnected from the rest.
+    </p>
+    <p>
+      The bounding box of <code>div.green</code> is removed from the region,
+      because it's not a descendant of the <code>span</code>. The bounding box
+      of <code>div.red</code> is also removed from the region despite it being a
+      descendant of the <code>span</code>. This is because it has a click event
+      listener that calls <code>stopPropagation()</code>.
+    </p>
+    <p>
+      The bounding box of <code>div.yellow</code> is <b>not</b> removed from the
+      region despite it <b>not</b> being a descendant. This is because it has
+      <code>pointer-events: none</code> so it is "invisible" to click events.
+    </p>
+    <p>
+      The clickable region of an element can be constructed with the following
+      procedure:
+    </p>
+    <ol>
+      <li>
+        Take the union of the bounding boxes of the element itself and it's
+        descendants, a potentially disconnected set.
+      </li>
+      <li>
+        From that region, remove the bounding boxes of the descendants with a
+        click event listener that calls <code>stopPropagation()</code>.
+      </li>
+      <li>
+        Then, remove the bounding boxes of the non-descendants that are
+        positioned on top and does <b>not</b> have
+        <code>pointer-events: none</code>.
+      </li>
+      <li>
+        The result is the region of the page where a click event will propagate
+        to the given element.
+      </li>
+    </ol>
+    <p>
+      The <code>stopPropagation()</code> case is very likely too difficult to
+      recognize with static analysis. We would have to either do actual runtime
+      tests or do static analysis of the JavaScript that gets loaded by the
+      page.
+    </p>
+    <p>
+      For that reason, our goal will be to determine the
+      <i>potentially clickable regions</i> assuming all descendants allow
+      propagation.
+    </p>
+  </body>
+</html>

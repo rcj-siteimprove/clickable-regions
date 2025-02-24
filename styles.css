@@ -1,0 +1,35 @@
+:root {
+  --green-background: #d4edda;
+  --red-background: #f8d7da;
+  --purple-background: #e9d8fd;
+  --yellow-background: #fff3cd;
+  --blue-background: #cce5ff;
+}
+
+.green {
+  background: var(--green-background);
+}
+
+.red {
+  background: var(--red-background);
+}
+
+.purple {
+  background: var(--purple-background);
+}
+
+.yellow {
+  background: var(--yellow-background);
+}
+
+.blue {
+  background: var(--blue-background);
+}
+
+html {
+  font-family: monospace;
+}
+
+p {
+  line-height: 1.5;
+}
